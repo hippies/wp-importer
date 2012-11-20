@@ -4,11 +4,27 @@
 class wp_importer
 {  
 
-
+	private $version = '1.0';
     private $posttype = null; 
     private $metakey = null; 
 	private $debugmode = 0;
 	private $debugprefix = " ### "; 
+
+	private $custom_fields = array(
+		array("key"   => "representative","value" => 'assa'),
+			);
+
+
+	public function addCustomField($key,$value)
+	{
+			$custom_fields[]=array("key" => "himp_$key", "value"=>$value);			
+			$this->printDebugMsg("Setting up meta keypair: '$key':'$value'");
+	}
+
+	public function resetCustomFields()
+	{
+			$this->custom_fields = array();
+	}
 
 	private function printDebugMsg($debugmsg)
 	{
