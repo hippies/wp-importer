@@ -39,7 +39,7 @@ class wp_importer
 					);
 		
 		$posts_array = get_posts( $args );
-		$retval = -1;
+		$retval = null;
 		if(count($posts_array)>0){
 			$retval = $posts_array[0];
 			
