@@ -11,24 +11,61 @@ class wp_importer
 	private $debugprefix = " ### "; 
 	private $post_object = array();
 	private $meta_prefix = 'himp_';
+	private $default_name = 'Scouterna.se';
 
+	function create_insert_user($name = 'Scouterna.se', $email = null,$role = 'subscriber')
+	{
+		$userid = null;
+		if ($name == '')
+			$name = $this->default_name;
+			
+		$user_username = sanitize_user($name);
+	    $user_username = preg_replace( '|[^a-z0-9_.\-]|i', '', $user_username );
+		$user_displayname = $name; 
+		$user_email = $email ?: "$user_username@importeduser.se";
+
+		if ($data = get_user_by('login',$user_username))
+			{
+				echo "got the id ($data->ID) for username '$user_username'!\n";					
+				$userid = $data->ID;
+			}
+			elseif ($data = get_user_by('email',$user_email))
+			{
+				echo "got the id ($data->ID) for email '$user_email'!\n";					
+				$userid = $data->ID;						
+			}	
+			else
+			{
+				$userdata['user_pass'] = wp_generate_password( $length=12, $include_standard_special_chars=false );
+				$userdata['user_login'] = $user_username;
+				$userdata['user_nicename'] = $name;
+				$userdata['user_email'] = $user_email;
+				$userdata['display_name'] = $name;						
+				$userdata['role'] = $role;			
+				print_r($userdata);
+				$userid = wp_insert_user($userdata);
+				if ( is_wp_error($userid) )
+				   echo $userid->get_error_message();				
+			    echo "inserted user '$user_username' with email '$user_email' with user ID '$userid'\n";
+			}
+
+		return $userid;
+	}
 
 
 	public function wipePostObjects()
 	{                             
 		global $wpdb;                    
 		$query =  "SELECT * FROM $wpdb->posts WHERE post_type = '".$this->posttype. "'";
-		echo "$query \n";
 
 		$fivesdrafts = $wpdb->get_results($query);
-		print_r($fivedrafts);
 		if ($fivesdrafts) 
         {
                 $counter = 0;
                 foreach ($fivesdrafts as $post) 
                 {
                         $counter++;
-                        print $post->ID ." : $counter \n";      
+                        $this->printDebugMsg("Deleting " . $post->ID ." : $counter");
                         wp_delete_post($post->ID,true);
                 }
         }
@@ -40,9 +77,13 @@ class wp_importer
 			);
 
 
-	public function addCustomField($key,$value)
+	public function addCustomField($key,$value,$prefix = true )
 	{
-			$this->custom_fields[]=array("key" => "himp_$key", "value"=>$value);			
+			if ($prefix)
+					 $extraprefix = $meta_prefix;
+				else
+					 $extraprefix = '';
+			$this->custom_fields[]=array("key" => "$extraprefix$key", "value"=>$value);			
 			$this->printDebugMsg("Setting up meta keypair: '$key':'$value'");
 			print_r($this->custom_fields);
 
