@@ -9,6 +9,10 @@ class wp_importer
     private $metakey = null; 
 	private $debugmode = 0;
 	private $debugprefix = " ### "; 
+	private $post_object = array();
+
+	private $meta_prefix = 'himp_';
+
 
 	private $custom_fields = array(
 		array("key"   => "representative","value" => 'assa'),
@@ -17,8 +21,10 @@ class wp_importer
 
 	public function addCustomField($key,$value)
 	{
-			$custom_fields[]=array("key" => "himp_$key", "value"=>$value);			
+			$this->custom_fields[]=array("key" => "himp_$key", "value"=>$value);			
 			$this->printDebugMsg("Setting up meta keypair: '$key':'$value'");
+			print_r($this->custom_fields);
+
 	}
 
 	public function resetCustomFields()
@@ -26,7 +32,12 @@ class wp_importer
 			$this->custom_fields = array();
 	}
 
-	private function printDebugMsg($debugmsg)
+	public function resetPostObject()
+	{
+			$this->post_object = array();
+	}
+
+	public function printDebugMsg($debugmsg)
 	{
 		echo $this->debugprefix . "$debugmsg\n";
 	}
@@ -44,22 +55,60 @@ class wp_importer
 		return $retval;		
 	}
 
+	private function addCustomFields($id)
+	{
+
+		for($i = 0;$i<count($this->custom_fields);$i++)
+		{
+			add_post_meta($id, $this->custom_fields[$i]["key"], $this->custom_fields[$i]["value"], true);
+			$this->printDebugMsg("added meta keys to $id : " . $this->custom_fields[$i]["key"] . ': ' .$this->custom_fields[$i]["value"]);
+						
+		}
+	}
+
+
+	public function setAssetFields($array)
+	{
+			$this->post_object = $array; 
+			$this->post_object['post_type'] = $this->posttype; 
+	}
+
+	public function insertAsset()
+
+	{			
+			$inserted_as = wp_insert_post( $this->post_object, true);
+
+			if ( is_wp_error($inserted_as) )
+				{
+				   echo $inserted_as->get_error_message();			
+				   die; 
+				}
+			$this->addCustomFields($inserted_as);
+			$this->resetCustomFields();
+			$this->resetPostObject();
+			return $inserted_as; 			
+	}
+
+
 	public function find_asset($value,$posttype,$metakey){
 		$retArr = array();
 		$args = array(
 					'numberposts'     => 100,
-					'post_type'       => 'produkt',
+					'post_type'       => $posttype,
 					'post_status'     => 'publish,draft',
-					'meta_key' => 'product_id',
+					'meta_key' => $this->meta_prefix . $metakey,
 					'meta_value' => $value
 					);
 		
+		print_r($args);
+
 		$posts_array = get_posts( $args );
 		$retval = null;
 		if(count($posts_array)>0){
 			$retval = $posts_array[0];
 			
 		}
+
         wp_reset_query();   
 		return $retval;		
 	}
