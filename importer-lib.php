@@ -13,7 +13,15 @@ class wp_importer
 	private $meta_prefix = 'himp_';
 	private $default_name = 'Scouterna.se';
 
-	function create_insert_user($name = 'Scouterna.se', $email = null,$role = 'subscriber')
+
+	public function epi_to_wp_date($epidate)
+	{
+		date_default_timezone_set('Europe/Stockholm');
+		$parsed = date_parse($epidate);
+		return date('Y-m-d H:i:s',mktime($parsed['hour'],$parsed['minute'],$parsed['second'],$parsed['month'],$parsed['day'],$parsed['year']));
+	}
+
+	public function create_insert_user($name = 'Scouterna.se', $email = null,$role = 'subscriber')
 	{
 		$userid = null;
 		if ($name == '')
