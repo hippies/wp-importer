@@ -10,8 +10,29 @@ class wp_importer
 	private $debugmode = 0;
 	private $debugprefix = " ### "; 
 	private $post_object = array();
-
 	private $meta_prefix = 'himp_';
+
+
+
+	public function wipePostObjects()
+	{                             
+		global $wpdb;                    
+		$query =  "SELECT * FROM $wpdb->posts WHERE post_type = '".$this->posttype. "'";
+		echo "$query \n";
+
+		$fivesdrafts = $wpdb->get_results($query);
+		print_r($fivedrafts);
+		if ($fivesdrafts) 
+        {
+                $counter = 0;
+                foreach ($fivesdrafts as $post) 
+                {
+                        $counter++;
+                        print $post->ID ." : $counter \n";      
+                        wp_delete_post($post->ID,true);
+                }
+        }
+     }
 
 
 	private $custom_fields = array(
