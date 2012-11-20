@@ -4,7 +4,31 @@
 class wp_importer
 {  
 
-	function find_asset($value,$posttype,$metakey){
+
+    private $posttype = null; 
+    private $metakey = null; 
+	private $debugmode = 0;
+	private $debugprefix = " ### "; 
+
+	private function printDebugMsg($debugmsg)
+	{
+		echo $this->debugprefix . "$debugmsg\n";
+	}
+
+	public function getAsset($value)
+	{
+		if (!$this->posttype) die("Posttype not defined\n");
+		if (!$this->metakey) die("Posttype not defined\n");
+
+		if ($retval = $this->find_asset($value, $this->posttype, $this->metakey))
+				$this->printDebugMsg("Found asset for '$value'");
+			else
+				$this->printDebugMsg("Did NOT find asset for '$value'");
+
+		return $retval;		
+	}
+
+	public function find_asset($value,$posttype,$metakey){
 		$retArr = array();
 		$args = array(
 					'numberposts'     => 100,
@@ -21,8 +45,18 @@ class wp_importer
 			
 		}
         wp_reset_query();   
-		return $retval;
-		
+		return $retval;		
 	}
+
+
+    public function setPostType($posttype) { $this->posttype = $posttype; }
+    public function getPostType() { return $this->posttype; 			  }
+
+    public function setMetaKey($metakey) { $this->metakey = $metakey; 	  }
+    public function getMetaKey() { return $this->metakey; 			 	  }
+
+    public function setDebugMode($debugmode) { $this->debugmode = $debugmode; 	  }
+    public function getDebugMode() { return $this->debugmode; 			 	  }
+
 
 }
