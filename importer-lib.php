@@ -13,7 +13,11 @@ class wp_importer {
 	private $debugprefix = " ### ";
 	private $post_object = array();
 	private $meta_prefix = 'himp_';
-	private $default_name = 'Scouterna.se';
+	private $default_name = '';
+
+	public function __construct( $name = 'Imported' ) {
+		$this->default_name = $name;
+	}
 
 
 	public function epi_to_wp_date( $epidate ) {
