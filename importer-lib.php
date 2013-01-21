@@ -171,6 +171,19 @@ class wp_importer {
 	}
 
 	/**
+	 * Set the default username for objects beeing inserted
+	 *
+	 * @param string  $default_name 'Imported username'
+	 */
+	public function setDefaultName( $custom_default_name ) { $this->default_name = $custom_default_name; }
+	/**
+	 * Get the default username for objects beeing inserted
+	 *
+	 * @return string 'Imported username'
+	 */
+	public function getDefaultName() {  return $this->default_name;      }
+
+	/**
 	 * Set the default post type for objects beeing inserted
 	 *
 	 * @param string  $posttype Posttype, eg. 'post', 'page' etc
