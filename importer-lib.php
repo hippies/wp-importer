@@ -26,7 +26,7 @@ class wp_importer {
 		return date( 'Y-m-d H:i:s', mktime( $parsed['hour'], $parsed['minute'], $parsed['second'], $parsed['month'], $parsed['day'], $parsed['year'] ) );
 	}
 
-	public function create_insert_user( $name = 'Scouterna.se', $email = null, $role = 'subscriber' ) {
+	public function create_insert_user( $name = '', $email = null, $role = 'subscriber' ) {
 		$userid = null;
 		if ( $name == '' )
 			$name = $this->default_name;
