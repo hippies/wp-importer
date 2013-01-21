@@ -1,8 +1,10 @@
 <?php
 
-
 class wp_importer {
-
+	/**
+	 * Version number 
+	 * @var string
+	 */
 	private $version = '1.1';
 	private $posttype = null;
 	private $metakey = null;
@@ -163,8 +165,15 @@ class wp_importer {
 		return $retval;
 	}
 
-
+	/**
+	 * Set the default post type for objects beeing inserted
+	 * @param string $posttype Posttype, eg. 'post', 'page' etc
+	 */
 	public function setPostType( $posttype ) { $this->posttype = $posttype; }
+	/**
+	 * Get the default post set for objects beeing inserted
+	 * @return string Posttype, eg. 'post', 'page' etc
+	 */
 	public function getPostType() { return $this->posttype;      }
 
 	public function setMetaKey( $metakey ) { $this->metakey = $metakey;    }
