@@ -2,7 +2,8 @@
 
 class wp_importer {
 	/**
-	 * Version number 
+	 * Version number
+	 *
 	 * @var string
 	 */
 	private $version = '1.1';
@@ -167,11 +168,13 @@ class wp_importer {
 
 	/**
 	 * Set the default post type for objects beeing inserted
-	 * @param string $posttype Posttype, eg. 'post', 'page' etc
+	 *
+	 * @param string  $posttype Posttype, eg. 'post', 'page' etc
 	 */
 	public function setPostType( $posttype ) { $this->posttype = $posttype; }
 	/**
 	 * Get the default post set for objects beeing inserted
+	 *
 	 * @return string Posttype, eg. 'post', 'page' etc
 	 */
 	public function getPostType() { return $this->posttype;      }
