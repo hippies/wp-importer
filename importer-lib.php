@@ -6,7 +6,7 @@ class wp_importer {
 	 *
 	 * @var string
 	 */
-	private $version = '1.1';
+	private $version = '1.2';
 	private $posttype = null;
 	private $metakey = null;
 	private $debugmode = 0;
@@ -26,7 +26,7 @@ class wp_importer {
 
 
 	public function epi_to_wp_date( $epidate ) {
-		date_default_timezone_set( 'Europe/Stockholm' );
+		date_default_timezone_set( get_option('timezone_string') );
 		$parsed = date_parse( $epidate );
 		return date( 'Y-m-d H:i:s', mktime( $parsed['hour'], $parsed['minute'], $parsed['second'], $parsed['month'], $parsed['day'], $parsed['year'] ) );
 	}
