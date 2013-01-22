@@ -15,6 +15,11 @@ class wp_importer {
 	private $meta_prefix = 'himp_';
 	private $default_name = '';
 
+	/**
+	 * Constructor - $foo = new wp_importer('Default importer user')
+	 *
+	 * @param string  $name [description]
+	 */
 	public function __construct( $name = 'Imported' ) {
 		$this->default_name = $name;
 	}
