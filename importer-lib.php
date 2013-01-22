@@ -24,9 +24,15 @@ class wp_importer {
 		$this->default_name = $name;
 	}
 
-
+	/**
+	 * Convert Episervers internal timestamp to wordpress tempstamp format, adjusted to to the Wordpress
+	 * installations perfered timezone.
+	 *
+	 * @param string  $epidate Timestamp formated as string in Episerver 4's timestamp
+	 * @return string          Timestamp formated as string in Wordpress format, adjusted to local timezone
+	 */
 	public function epi_to_wp_date( $epidate ) {
-		date_default_timezone_set( get_option('timezone_string') );
+		date_default_timezone_set( get_option( 'timezone_string' ) );
 		$parsed = date_parse( $epidate );
 		return date( 'Y-m-d H:i:s', mktime( $parsed['hour'], $parsed['minute'], $parsed['second'], $parsed['month'], $parsed['day'], $parsed['year'] ) );
 	}
